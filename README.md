@@ -3,14 +3,21 @@
 
 ## 一、功能简介
 
-**基于ansible自动化运维工具提供Greenplum6.10.1数据库多节点在CentOS7系统下的一键安装部署功能。**
+**基于ansible自动化运维工具提供Greenplum6数据库多节点在CentOS7系统下的一键安装部署功能。**
+
+**当前提供安装的版本：**
+
+- 6.10.1 请见6.10.1分支
+
+- 6.12.1 请见6.12.1分支
+
 
 ## 二、安装教程
 
 ### 1、制作安装bin包：
 
 ```
-[root@localhost root]# git clone https://gitee.com/inrgihc/greenplum_installer.git
+[root@localhost root]# git clone -b 6.12.1 https://gitee.com/inrgihc/greenplum_installer.git
 [root@localhost root]# cd greenplum_installer && make all
 [root@localhost root]# tree bin/
 .
