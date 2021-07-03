@@ -8,10 +8,14 @@
 #
 ######################################################
 
-# Greenplum的RPM安装包路径
-RPM_FILE_NAME=files/greenplum-db-6.13.0-rhel7-x86_64.rpm
+# [版本升级改这里]Greenplum的RPM安装包路径
+RPM_FILE_NAME=files/open-source-greenplum-db-6.16.3-rhel7-x86_64.rpm
+# [版本升级改这里]Greenplum的RPM安装包版本
+RPM_FILE_VERSION=6.16.3
 # 安装主机节点配置列表
 TXT_FILE_NAME=$1
+# segment节点上配置primary的实例个数
+SEG_INSTANCE_NUMBER=$2
 # Greenplum主机管理员账号密码
 PASSWORD_GPDB_ADMIN=1qazXSW@
 
@@ -23,10 +27,12 @@ source ./sbin/config_env_tools.sh
 source ./sbin/config_file_reader.sh $TXT_FILE_NAME
 # 配置准备
 source ./sbin/auto_hosts_config.sh $PASSWORD_GPDB_ADMIN
-# ROOT免登录设置
-source ./sbin/auto_ssh_login.sh
 # Geenplum安装
-ansible-playbook ./deploy.yml -i $TMP_GP_ALL_IPS_FILE -e greenplum_admin_password=$PASSWORD_GPDB_ADMIN -e package_path=$RPM_FILE_NAME
+ansible-playbook ./deploy.yml -i $TMP_GP_ALL_IPS_FILE \
+      -e greenplum_admin_password=$PASSWORD_GPDB_ADMIN \
+      -e package_path=$RPM_FILE_NAME \
+      -e version=$RPM_FILE_VERSION \
+      -e greenplum_primay_segments_per_host_number=$SEG_INSTANCE_NUMBER
 # Master节点配置
 if [ $? -eq 0 ];then
    ansible-playbook ./dbinit.yml -i $TMP_GP_MASTER_IP_FILE
