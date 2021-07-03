@@ -133,7 +133,7 @@ for ((i = 0; i < ${#HOSTSADDR[@]}; i++)); do
 
         CMD="scp -P $port /root/.ssh/authorized_keys root@$ip:/root/.ssh/authorized_keys"
         if [ "$user_name" != "root" ]; then
-                CMD="scp /home/$user_name/.ssh/authorized_keys $user_name@$ip:/home/$user_name/.ssh/authorized_keys"
+                CMD="scp -P $port /home/$user_name/.ssh/authorized_keys $user_name@$ip:/home/$user_name/.ssh/authorized_keys"
         fi
 
         expect <<EOF
