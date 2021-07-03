@@ -31,8 +31,6 @@ INSTALL_LOG_FILE=${SELF_SHELL_PATH}/install_gpdb.log
 
 # 转换为文件的绝对路径
 FILENAME=`readlink -f $1`
-# 每个数据节点的Primary实例个数
-SEGINSTANCE='2'
 
 # 解压后执行操作
 TMP_FILE_NAME=/tmp/greenplum6-centos7-release.tgz
@@ -47,7 +45,7 @@ cd /tmp/greenplum/src/
 if [ "$2" == "uninstall" ] ; then
     sh ./uninstall.sh $FILENAME | tee -a ${INSTALL_LOG_FILE}
 elif [ "$2" == "install" ]; then
-    sh ./install.sh $FILENAME $SEGINSTANCE | tee -a ${INSTALL_LOG_FILE}
+    sh ./install.sh $FILENAME | tee -a ${INSTALL_LOG_FILE}
 else
     echo "[ERROR]: invalid parameter for [option] supplied, available values are : install, uninstall " 
     print_usage

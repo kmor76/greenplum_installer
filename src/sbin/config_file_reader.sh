@@ -34,11 +34,12 @@ while read line; do
     fi
 
     ip_port_str_array=(${ip_port//:/ }) 
-    if [ ${#array[@]} eq "1" ]; then     
+    len_ip_port_str_array=${#ip_port_str_array[@]}
+    if [ "$len_ip_port_str_array" -eq "1" ]; then     
         ip=${ip_port_str_array[0]}          # 提取文件中的ip地址
         port="22"                           # 提取文件中的port端口(不写默认为22端口)
-    elif  [ ${#array[@]} eq "2" ]; then
-        ip=${ip_port_str_array[1]}          # 提取文件中的ip地址
+    elif  [ "$len_ip_port_str_array" -eq "2" ]; then
+        ip=${ip_port_str_array[0]}          # 提取文件中的ip地址
         port=${ip_port_str_array[1]}        # 提取文件中的port端口
     else
         echo "[ERROR]: File content format error,reason parse [ip address and port number] invalid"
@@ -47,7 +48,7 @@ while read line; do
 
     user_name=$(echo $line | cut -d " " -f2) # 提取文件中的用户名
     pass_word=$(echo $line | cut -d " " -f3) # 提取文件中的密码
-    echo "IP:$ip  PORT:$port   User:$user_name   Password:$pass_word"
+    echo "IP:$ip  Port:$port   User:$user_name   Password:$pass_word"
 
     if [ ! -n "$ip" ]; then
         echo "[ERROR]: File content format error,reason get [ip address] empty"

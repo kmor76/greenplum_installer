@@ -41,14 +41,14 @@ for ((i = 0; i < ${#HOSTSADDR[@]}; i++)); do
         echo "$ip mdw #master" >>$TMP_ETC_HOSTS_FILE
         echo "mdw" >>$TMP_GP_ALL_HOST_FILE
         echo "mdw" >>$TMP_GP_MASTER_HOST_FILE
-        echo "mdw  gpadmin  $PASSWORD_GPDB_ADMIN" >>$TMP_GP_GPADMIN_HOST_FILE
+        echo "mdw:$port  gpadmin  $PASSWORD_GPDB_ADMIN" >>$TMP_GP_GPADMIN_HOST_FILE
         echo "$ip hostname=mdw ansible_ssh_port=$port ansible_ssh_user='$user_name' ansible_ssh_pass='$pass_word'" >>$TMP_GP_ALL_IPS_FILE
     elif [ "$i" == "1" ]; then
         echo "$ip hostname=smdw ansible_ssh_port=$port ansible_ssh_user='$user_name' ansible_ssh_pass='$pass_word'" >>$TMP_GP_STANDBY_IP_FILE
         echo "$ip smdw #standby" >>$TMP_ETC_HOSTS_FILE
         echo "smdw" >>$TMP_GP_ALL_HOST_FILE
         echo "smdw" >>$TMP_GP_STANDBY_HOST_FILE
-        echo "smdw  gpadmin  $PASSWORD_GPDB_ADMIN" >>$TMP_GP_GPADMIN_HOST_FILE
+        echo "smdw:$port  gpadmin  $PASSWORD_GPDB_ADMIN" >>$TMP_GP_GPADMIN_HOST_FILE
         echo "$ip hostname=smdw ansible_ssh_port=$port ansible_ssh_user='$user_name' ansible_ssh_pass='$pass_word'" >>$TMP_GP_ALL_IPS_FILE
     else
         echo "$ip" >>$TMP_GP_SEGMENT_IP_FILE
@@ -56,7 +56,7 @@ for ((i = 0; i < ${#HOSTSADDR[@]}; i++)); do
         echo "$ip sdw$idx #segment$idx" >>$TMP_ETC_HOSTS_FILE
         echo "sdw$idx" >>$TMP_GP_ALL_HOST_FILE
         echo "sdw$idx" >>$TMP_GP_SEGMENT_HOST_FILE
-        echo "sdw$idx  gpadmin  $PASSWORD_GPDB_ADMIN" >>$TMP_GP_GPADMIN_HOST_FILE
+        echo "sdw$idx:$port  gpadmin  $PASSWORD_GPDB_ADMIN" >>$TMP_GP_GPADMIN_HOST_FILE
         echo "$ip hostname=sdw$idx ansible_ssh_port=$port ansible_ssh_user='$user_name' ansible_ssh_pass='$pass_word'" >>$TMP_GP_ALL_IPS_FILE
     fi
 done
