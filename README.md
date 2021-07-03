@@ -45,14 +45,14 @@
 ├── account.txt
 └── greenplum6-centos7-release.bin
 [root@localhost root]# cat account.txt 
-10.101.1.10:22 root 123321      //第1个主机的IP:端口,账号,密码
-10.101.1.11:22 root 123321      //第2个主机的IP:端口,账号,密码
-10.101.1.12:22 root 123321      //第3个主机的IP:端口,账号,密码
-10.101.1.13:22 root 123321      //第4个主机的IP:端口,账号,密码 (至少四个主机)
+10.101.1.10 root 123321      //第1个主机的IP:端口,账号,密码
+10.101.1.11 root 123321      //第2个主机的IP:端口,账号,密码
+10.101.1.12 root 123321      //第3个主机的IP:端口,账号,密码
+10.101.1.13 root 123321      //第4个主机的IP:端口,账号,密码 (至少四个主机)
 [root@localhost root]# sh greenplum6-centos7-release.bin ./account.txt install
 ```
 
-注：安装文档:  https://gitee.com/inrgihc/greenplum_installer/wikis/pages
+注：Greenplum不支持非22端口安装，安装文档:  https://gitee.com/inrgihc/greenplum_installer/wikis/pages
 
 ## 三、数据迁移
 
