@@ -90,7 +90,7 @@ greenplum_segment_nodes='node2 node3 node4'
 [root@localhost bin]# sh ./greenplum6-centos7-installer-release.bin ./host.ini uninstall
 ```
 
-## 三、问题反馈
+## 五、问题反馈
 
 如果您看到或使用了本工具，或您觉得本工具对您有价值，请为此项目点个赞，多谢！如果您在使用时遇到了bug，欢迎在issue中反馈。也可扫描下方二维码入群讨论：（加好友请注明："程序交流"）
 
