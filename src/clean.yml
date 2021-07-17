@@ -1,0 +1,9 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: cleanup all
+  gather_facts: false
+  hosts: node
+  roles:
+    - autossh 
+    - cleanup

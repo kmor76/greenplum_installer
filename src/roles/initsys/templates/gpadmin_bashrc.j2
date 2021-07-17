@@ -10,8 +10,8 @@ fi
 
 # User specific aliases and functions
 
-source {{ greenplum_install_directory }}/greenplum-db/greenplum_path.sh
+source /usr/local/greenplum-db/greenplum_path.sh
 export MASTER_DATA_DIRECTORY={{ greenplum_data_directory }}/master/gpseg-1/
 export PGPORT=5432
-export PGUSER=gpadmin
+export PGUSER={{ greenplum_admin_user }}
 export PGDATABASE=postgres

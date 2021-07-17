@@ -1,0 +1,156 @@
+---
+
+- name: convert greenplum master hostname to ip address
+  shell: |
+    ip_address=$(ping {{ greenplum_master_node }} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'); \
+    echo $ip_address
+  register: greenplum_master_node_ip
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: calculate greenplum primary segment instance
+  shell: |
+    primary_path_all=""; \
+    for i in `seq 1 {{ greenplum_primary_segments_per_host_number }}` ; do \
+        primary_path_all="$primary_path_all {{ greenplum_data_directory }}/primary"; \
+    done; \
+    echo $primary_path_all
+  register: primary_path_all
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: calculate greenplum mirror segment instance
+  shell: |
+    mirror_path_all=""; \
+    for i in `seq 1 {{ greenplum_primary_segments_per_host_number }}` ; do \
+        mirror_path_all="$mirror_path_all {{ greenplum_data_directory }}/mirror"; \
+    done; \
+    echo $mirror_path_all
+  register: mirror_path_all
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: copy greenplum initialize template files
+  template: 
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: 'gpadmin_bashrc.j2', dest: '/home/{{ greenplum_admin_user }}/.bashrc' }
+    - { src: 'gpinitsystem_config.j2', dest: '/home/{{ greenplum_admin_user }}/gpinitsystem_config' }
+  delegate_facts: true
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+
+- name: copy files for initialize greenplum master
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    remote_src: no
+  with_items:
+    - { src: 'initdb_gpdb.sql', dest: '/home/{{ greenplum_admin_user }}/initdb_gpdb.sql' }
+    - { src: 'gpadmin_auto_ssh.sh', dest: '/home/{{ greenplum_admin_user }}/gpadmin_auto_ssh.sh' }
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+
+- name: change directory ownership
+  file:
+    path: '{{ item }}'
+    owner: '{{ greenplum_admin_user }}'
+    group: '{{ greenplum_admin_user }}'
+    recurse: yes
+  with_items:
+    - '/home/{{ greenplum_admin_user }}/'
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+
+- name: generate greenplum segment hosts file
+  shell: |
+    result=( {{ greenplum_segment_nodes}} ); \
+    rm -rf /home/{{ greenplum_admin_user }}/segment_hosts; \
+    for i in ${result[@]}; do \
+      echo ${i}>>/home/{{ greenplum_admin_user }}/segment_hosts; \
+    done
+  become: yes
+  become_method: su
+  become_flags: '-'
+  become_user: '{{ greenplum_admin_user }}'
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+
+- name: generate greenplum all hosts file with standby
+  shell: |
+    result=( {{ greenplum_master_node }} {{ greenplum_standby_node}} {{ greenplum_segment_nodes}} ); \
+    rm -rf /home/{{ greenplum_admin_user }}/all_hosts; \
+    for i in ${result[@]}; do \
+     echo ${i} {{ greenplum_admin_user }}  {{ greenplum_admin_password }}>>/home/{{ greenplum_admin_user }}/all_hosts; \
+    done
+  become: yes
+  become_method: su
+  become_flags: '-'
+  become_user: '{{ greenplum_admin_user }}'
+  when: greenplum_standby_node is defined
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+
+- name: generate greenplum all hosts file without standby
+  shell: |
+    result=( {{ greenplum_master_node }} {{ greenplum_segment_nodes}} ); \
+    rm -rf /home/{{ greenplum_admin_user }}/all_hosts; \
+    for i in ${result[@]}; do \
+     echo ${i} {{ greenplum_admin_user }}  {{ greenplum_admin_password }}>>/home/{{ greenplum_admin_user }}/all_hosts; \
+    done
+  become: yes
+  become_method: su
+  become_flags: '-'
+  become_user: '{{ greenplum_admin_user }}'
+  when: greenplum_standby_node is undefined
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+
+- name: configure greenplum admin user auto login
+  command: sh /home/{{ greenplum_admin_user }}/gpadmin_auto_ssh.sh /home/{{ greenplum_admin_user }}/all_hosts
+  become: yes
+  become_method: su
+  become_flags: '-'
+  become_user: '{{ greenplum_admin_user }}'
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+
+- name: initialize greenplum master node with standby
+  shell: '{{ item }}'
+  become: yes
+  become_method: su
+  become_flags: '-'
+  become_user: '{{ greenplum_admin_user }}'
+  with_items:
+    - "gpinitsystem -a --ignore-warnings -c /home/{{ greenplum_admin_user }}/gpinitsystem_config -h /home/{{ greenplum_admin_user }}/segment_hosts -s {{ greenplum_standby_node }}"
+  when: greenplum_standby_node is defined
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  
+- name: initialize greenplum master node without standby
+  shell: '{{ item }}'
+  become: yes
+  become_method: su
+  become_flags: '-'
+  become_user: '{{ greenplum_admin_user }}'
+  with_items:
+    - "gpinitsystem -a --ignore-warnings -c /home/{{ greenplum_admin_user }}/gpinitsystem_config -h /home/{{ greenplum_admin_user }}/segment_hosts"
+  when: greenplum_standby_node is undefined
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  
+- name: configure greenplum master node
+  shell: '{{ item }}'
+  become: yes
+  become_method: su
+  become_flags: '-'
+  become_user: '{{ greenplum_admin_user }}'
+  with_items:
+    - "psql -d postgres -U gpadmin -f /home/{{ greenplum_admin_user }}/initdb_gpdb.sql"
+    - "echo \"host  all  all  0.0.0.0/0  password\" >> {{ greenplum_data_directory }}/master/gpseg-1/pg_hba.conf"
+    - "gpconfig -c log_statement -v none"
+    - "gpconfig -c gp_enable_global_deadlock_detector -v on"
+    - "sleep 5 && gpstop -u"
+  run_once: true
+  delegate_to : '{{ greenplum_master_node_ip.stdout }}'

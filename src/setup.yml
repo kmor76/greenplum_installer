@@ -1,0 +1,24 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: 1. install environment and package
+  gather_facts: true
+  hosts: node
+  roles:
+    - autossh 
+    - install 
+  tags: environment
+
+- name: 2. initialize greenplum cluster
+  gather_facts: false
+  hosts: node
+  roles:
+    - initsys 
+  tags: startup
+
+- name: 3. print information message
+  gather_facts: false
+  hosts: node
+  roles:
+    - success 
+  tags: success

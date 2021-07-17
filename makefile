@@ -1,5 +1,5 @@
 BIN_DIR=bin
-PKG_BIN=greenplum6-centos7-release.bin
+PKG_BIN=greenplum6-centos7-installer-release.bin
 SRC_DIR=src
 TMP_TAR_NAME=greenplum.tgz
 
@@ -9,7 +9,7 @@ build:
 	cat ./start.sh $(TMP_TAR_NAME) > $(BIN_DIR)/$(PKG_BIN)
 	chmod +x $(BIN_DIR)/$(PKG_BIN)
 	rm -f $(TMP_TAR_NAME)
-	cp ./account.txt $(BIN_DIR)/
+	cp ./host.ini $(BIN_DIR)/
 clean:
 	rm -rf $(BIN_DIR)/*
 	rm -f $(TMP_TAR_NAME)

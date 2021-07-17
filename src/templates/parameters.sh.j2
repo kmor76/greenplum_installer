@@ -1,0 +1,152 @@
+#!/bin/bash
+############################################
+# Function :  参数有效性检查脚本
+# Author : tang
+# Date : 2020-11-04
+#
+# Usage: sh parameters.sh
+#
+############################################
+set -e
+
+# 所有主机IP地址数组列表
+ALL_IPADDR_ARRAY=(
+{% for item in (groups['node']|default([]))|unique -%}
+{{ item }}
+{% endfor %}
+)
+
+ALL_IPADDR_ARRAY_tmp=( $(echo ${ALL_IPADDR_ARRAY[*]} | sed 's/ /\n/g' | sort | uniq ) )
+{% raw %}
+ALL_IPADDR_ARRAY_count=${#ALL_IPADDR_ARRAY[@]}
+ALL_IPADDR_ARRAY_count_tmp=${#ALL_IPADDR_ARRAY_tmp[@]}
+{% endraw %}
+if [ "$ALL_IPADDR_ARRAY_count" -ne "$ALL_IPADDR_ARRAY_count_tmp" ]; then
+    echo "[ERROR]: ip address list parameter have repeated item value !"
+    exit 1
+fi
+
+# 所有主机名称数组列表
+ALL_HOSTNAME_ARRAY=(
+{% for item in (groups['node']|default([]))|unique -%}
+{{ hostvars[item]['hostname'] }}
+{% endfor %}
+)
+
+ALL_HOSTNAME_ARRAY_tmp=( $(echo ${ALL_HOSTNAME_ARRAY[*]} | sed 's/ /\n/g' | sort | uniq ) )
+{% raw %}
+ALL_HOSTNAME_ARRAY_count=${#ALL_HOSTNAME_ARRAY[@]}
+ALL_HOSTNAME_ARRAY_count_tmp=${#ALL_HOSTNAME_ARRAY_tmp[@]}
+{% endraw %}
+if [ "$ALL_HOSTNAME_ARRAY_count" -ne "$ALL_HOSTNAME_ARRAY_count_tmp" ]; then
+    echo "[ERROR]: hostname list parameter have repeated item value !"
+    exit 1
+fi
+
+# 所有主机账号数组列表
+ALL_ACCOUNT_ARRAY=(
+{% for item in (groups['node']|default([]))|unique -%}
+{{ hostvars[item]['ansible_ssh_user'] }}
+{% endfor %}
+)
+
+################################
+# 主机名配置有效性检查
+# 参数：$1 参数名称字符串
+#      $2 参数值字符串
+# 返回值：有效返回0，否在返回1
+################################
+function check_hostname_valid(){
+    param_name=$1
+    value_item=$2
+    
+    for i in ${ALL_HOSTNAME_ARRAY[@]}; do
+        if [ "$i" = "$value_item" ]; then 
+            return 0
+        fi
+    done
+
+    echo "[ERROR]: hostname [$2] invalid item value of parameter [$1]!"
+    return 1
+}
+
+# 检查主机的个数是否大于等于3
+{% raw %}
+ALL_NODE_ARRAY_COUNT=${#ALL_IPADDR_ARRAY[@]}
+{% endraw %}
+if [ "$ALL_NODE_ARRAY_COUNT" -lt "3" ]; then
+    echo "[ERROR]: host ip count lower than 3,must greater or equal than 3!";
+    exit 1
+fi
+
+# 检查主机账号是否全部为root
+for i in ${ALL_ACCOUNT_ARRAY[@]}; do
+    if [ "$i" != "root" ]; then 
+        echo "[ERROR]: all host account must be 'root', but not '$i' !" 
+        exit 1
+    fi
+done
+
+# 检查参数greenplum_master_node配置的有效性
+greenplum_master_node_params=( {{ greenplum_master_node }} )
+{% raw %}
+greenplum_master_node_count=${#greenplum_master_node_params[@]}
+{% endraw %}
+if [ "$greenplum_master_node_count" -ne "1" ]; then
+    echo "[ERROR]: greenplum_master_node parameter value item count must only 1!"
+    exit 1
+fi
+for i in ${greenplum_master_node_params[@]}; do
+    check_hostname_valid "greenplum_master_node" $i
+    if [ $? != 0 ]; then 
+        exit 1; 
+    fi
+done
+
+# 检查参数greenplum_standby_node配置的有效性
+{%  if  greenplum_standby_node is defined -%}
+greenplum_standby_node_params=( {{ greenplum_standby_node }} )
+{% raw %}
+greenplum_standby_node_count=${#greenplum_standby_node_params[@]}
+{% endraw %}
+if [ "$greenplum_standby_node_count" -ne "1" ]; then
+    echo "[ERROR]: greenplum_standby_node parameter value item count must only 1!"
+    exit 1
+fi
+for i in ${greenplum_standby_node_params[@]}; do
+    check_hostname_valid "greenplum_standby_node" $i
+    if [ $? != 0 ]; then 
+        exit 1; 
+    fi
+done
+
+if [ "{{ greenplum_standby_node }}" = "{{ greenplum_master_node }}" ]; then
+    echo "[ERROR]: greenplum_standby_node value can not equal with greenplum_master_node!"
+    exit 1;
+fi
+{% endif -%}
+
+# 检查参数greenplum_segment_nodes配置的有效性
+greenplum_segment_nodes_params=( {{ greenplum_segment_nodes }} )
+{% raw %}
+greenplum_segment_nodes_count=${#greenplum_segment_nodes_params[@]}
+{% endraw %}
+if [ "$greenplum_segment_nodes_count" -lt "2" ]; then
+    echo "[ERROR]: greenplum_segment_nodes parameter value item count lower than 2,must greater or equal than 2!"
+    exit 1
+fi
+for i in ${greenplum_segment_nodes_params[@]}; do
+    check_hostname_valid "greenplum_segment_nodes" $i
+    if [ $? != 0 ]; then 
+        exit 1; 
+    fi
+done
+
+greenplum_segment_nodes_params_tmp=( $(echo ${greenplum_segment_nodes_params[*]} | sed 's/ /\n/g' | sort | uniq ) )
+{% raw %}
+greenplum_segment_nodes_count_tmp=${#greenplum_segment_nodes_params_tmp[@]}
+{% endraw %}
+if [ "$greenplum_segment_nodes_count" -ne "$greenplum_segment_nodes_count_tmp" ]; then
+    echo "[ERROR]: greenplum_segment_nodes parameter have repeated item value !"
+    exit 1
+fi

@@ -1,0 +1,40 @@
+#!/bin/bash
+############################################
+# Function :  安装成功后的提示信息
+# Author : tang
+# Date : 2020-10-22
+#
+# Usage: sh install_success.sh
+#
+############################################
+
+GREENPLUM_MASTER_HOST={{ greenplum_master_node }}
+
+shellwidth=$(stty size | awk '{print $2}')
+function print_line() {
+    for ((i = 1; i <= $shellwidth; i++)); do
+        echo -n '*'
+    done
+}
+
+# 打印结束
+print_line
+echo ""
+echo ""
+echo ""
+print_line
+echo ""
+echo "   !!! 恭 喜 您 GREENPLUM 集 群 已 经 安 装 【成 功】 !!!"
+echo ""
+print_line
+echo ""
+echo " Greenplum访问信息如下："
+echo ""
+echo "    IP地址：$(ping $GREENPLUM_MASTER_HOST -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')"
+echo "    端口号: 5432 "
+echo "    账号：gpadmin "
+echo "    密码：g0csWpW78Sm2  "
+echo ""
+echo ""
+print_line
+echo ""

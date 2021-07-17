@@ -1,0 +1,8 @@
+---
+
+- name: generate success script file
+  template: 
+    src: 'install_success.sh.j2'
+    dest: '/tmp/greenplum/install_success.sh'
+    mode: 755
+  delegate_to: 127.0.0.1

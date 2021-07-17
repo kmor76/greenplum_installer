@@ -27,7 +27,7 @@ if [ "$#" -lt "2" ]; then
 fi
 
 SELF_SHELL_PATH=$(cd `dirname $0`; pwd)
-INSTALL_LOG_FILE=${SELF_SHELL_PATH}/install_gpdb.log
+INSTALL_LOG_FILE=${SELF_SHELL_PATH}/gpdb_install.log
 
 # 转换为文件的绝对路径
 FILENAME=`readlink -f $1`

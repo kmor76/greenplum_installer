@@ -25,7 +25,7 @@ PORT_BASE=6000
 declare -a DATA_DIRECTORY=( {{ primary_path_all.stdout }} )
 
 #### OS-configured hostname or IP address of the master host.
-MASTER_HOSTNAME={{ greenplum_master_node_hostname }}
+MASTER_HOSTNAME={{ greenplum_master_node }}
 
 #### File system location where the master data directory 
 #### will be created.
