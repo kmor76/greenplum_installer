@@ -1,0 +1,14 @@
+---
+
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: generate parameters check script file
+    template:
+      src: '{{ item.src }}'
+      dest: '{{ item.dest }}'
+      mode: 755
+    with_items:
+      - { src: 'templates/parameters.sh.j2', dest: '/tmp/greenplum/parameters.sh' }
+    run_once: true
+    delegate_to: 127.0.0.1
