@@ -72,6 +72,30 @@ greenplum_master_node='node1'
 greenplum_segment_nodes='node2 node3 node4'
 ```
 
+### 3、 离线参数配置
+
+离线安装的参数配置包括：
+
+```
+# whether can connect to internet network
+#####################################################################
+## if can not connect internet,Please do flollows:
+## (1) install all rpm package for all node host first by download 
+## from : https://pan.baidu.com/s/1NfDBqHl1VD8X1kGKb0SigQ 
+## password is: 4ld8
+## (2) Synchronize of all node host manually
+#####################################################################
+network_connected=true
+```
+
+说明：如果配置```network_connected=false```，则离线安装前需要做如下操作：
+
+- (1) 在所有的主机节点上安装如下地址内的所有RPM包:
+
+百度网盘：https://pan.baidu.com/s/1NfDBqHl1VD8X1kGKb0SigQ  提取码：4ld8
+
+- (2) 手动配置所有主机节点的时间同步
+
 ## 四、安装与卸载
 
 - 安装操作

@@ -23,7 +23,8 @@
         echo "[ERROR]: host can not connect internet world!"; \
         exit 1; \
     fi
-
+  when: network_connected | bool
+  
 - name: add base yum repository
   yum_repository:
     name: base
@@ -31,6 +32,7 @@
     baseurl: http://mirrors.aliyun.com/centos/$releasever/centosplus/$basearch/
     gpgcheck: yes
     gpgkey: http://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-7
+  when: network_connected | bool
 
 - name: add epel yum repository
   yum_repository:
@@ -38,7 +40,8 @@
     description: Epel Aliyun Repository
     baseurl: http://mirrors.aliyun.com/epel/7/$basearch
     gpgcheck: no
-
+  when: network_connected | bool
+  
 - name: unmask firewall service
   shell: '{{ item }}'
   with_items:
@@ -69,6 +72,7 @@
 
 - name: configure sync time using aliyun server
   cron: name="sync time" minute='*/5' hour=* day=* month=* weekday=* job="/usr/sbin/ntpdate -u ntp1.aliyun.com >/dev/null 2>&1"
+  when: network_connected | bool
   ignore_errors: true
 
 - name: change host name to etc-hostname
