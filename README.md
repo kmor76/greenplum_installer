@@ -80,9 +80,7 @@ greenplum_segment_nodes='node2 node3 node4'
 # whether can connect to internet network
 #####################################################################
 ## if can not connect internet,Please do flollows:
-## (1) install all rpm package for all node host first by download 
-## from : https://pan.baidu.com/s/1NfDBqHl1VD8X1kGKb0SigQ 
-## password is: 4ld8
+## (1) install all dependency packages
 ## (2) Synchronize of all node host manually
 #####################################################################
 network_connected=true
@@ -90,9 +88,13 @@ network_connected=true
 
 说明：如果配置```network_connected=false```，则离线安装前需要做如下操作：
 
-- (1) 在所有的主机节点上安装如下地址内的所有RPM包:
+- (1) 在所有的主机节点上安装相关依赖
 
-百度网盘：https://pan.baidu.com/s/1NfDBqHl1VD8X1kGKb0SigQ  提取码：4ld8
+通常的方法有以下两种：
+
+  - (a) 配置内网环境内搭建一个yum源，集群内的所有主机都配置好该内网的yum源，以便主机上可以直接用yum命令安装依赖；
+
+  - (b) 先在可联网的相同版本操作系统的虚拟机内安装，并开启（安装节点的）yum依赖缓存，以收集找到所有的rpm依赖包，将其到内网机上进行全部安装，然后再使用本工具包进行安装（注意配置参数network_connected=false）
 
 - (2) 手动配置所有主机节点的时间同步
 
