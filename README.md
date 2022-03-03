@@ -81,7 +81,7 @@ greenplum_segment_nodes='node2 node3 node4'
 #####################################################################
 ## if can not connect internet,Please do flollows:
 ## (1) install all dependency packages
-## (2) Synchronize of all node host manually
+## (2) Synchronize time for all node host manually
 #####################################################################
 network_connected=true
 ```
