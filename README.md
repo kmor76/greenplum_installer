@@ -15,6 +15,8 @@
 └── greenplum6-centos7-installer-release.bin
 ```
 
+注：不同分支下对应Greenplum版本的安装版本。
+
 ## 三、配置文件host.ini说明
 
 安装所需的配置文件为host.ini，配置内容包括：
