@@ -7,6 +7,7 @@
   register: greenplum_master_node_ip
   run_once: true
   delegate_to: 127.0.0.1
+  tags: debug
 
 - name: calculate greenplum primary segment instance
   shell: |
@@ -39,7 +40,8 @@
     - { src: 'gpinitsystem_config.j2', dest: '/home/{{ greenplum_admin_user }}/gpinitsystem_config' }
   delegate_facts: true
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
+  tags: debug
 
 - name: copy files for initialize greenplum master
   copy:
@@ -50,7 +52,7 @@
     - { src: 'initdb_gpdb.sql', dest: '/home/{{ greenplum_admin_user }}/initdb_gpdb.sql' }
     - { src: 'gpadmin_auto_ssh.sh', dest: '/home/{{ greenplum_admin_user }}/gpadmin_auto_ssh.sh' }
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
 
 - name: change directory ownership
   file:
@@ -61,7 +63,7 @@
   with_items:
     - '/home/{{ greenplum_admin_user }}/'
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
 
 - name: generate greenplum segment hosts file
   shell: |
@@ -75,7 +77,7 @@
   become_flags: '-'
   become_user: '{{ greenplum_admin_user }}'
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
 
 - name: generate greenplum all hosts file with standby
   shell: |
@@ -90,7 +92,7 @@
   become_user: '{{ greenplum_admin_user }}'
   when: greenplum_standby_node is defined
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
 
 - name: generate greenplum all hosts file without standby
   shell: |
@@ -105,7 +107,7 @@
   become_user: '{{ greenplum_admin_user }}'
   when: greenplum_standby_node is undefined
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
 
 - name: configure greenplum admin user auto login
   command: sh /home/{{ greenplum_admin_user }}/gpadmin_auto_ssh.sh /home/{{ greenplum_admin_user }}/all_hosts
@@ -114,7 +116,7 @@
   become_flags: '-'
   become_user: '{{ greenplum_admin_user }}'
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
 
 - name: initialize greenplum master node with standby
   shell: '{{ item }}'
@@ -126,7 +128,7 @@
     - "gpinitsystem -a --ignore-warnings -c /home/{{ greenplum_admin_user }}/gpinitsystem_config -h /home/{{ greenplum_admin_user }}/segment_hosts -s {{ greenplum_standby_node }}"
   when: greenplum_standby_node is defined
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
   
 - name: initialize greenplum master node without standby
   shell: '{{ item }}'
@@ -138,7 +140,7 @@
     - "gpinitsystem -a --ignore-warnings -c /home/{{ greenplum_admin_user }}/gpinitsystem_config -h /home/{{ greenplum_admin_user }}/segment_hosts"
   when: greenplum_standby_node is undefined
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'
   
 - name: configure greenplum master node
   shell: '{{ item }}'
@@ -153,4 +155,4 @@
     - "gpconfig -c gp_enable_global_deadlock_detector -v on"
     - "sleep 5 && gpstop -u"
   run_once: true
-  delegate_to : '{{ greenplum_master_node_ip.stdout }}'
+  delegate_to: '{{ greenplum_master_node }}'

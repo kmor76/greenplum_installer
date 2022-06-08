@@ -1,0 +1,9 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: 1. install environment and package
+  gather_facts: true
+  hosts: node
+  roles:
+    - vm
+  tags: vm

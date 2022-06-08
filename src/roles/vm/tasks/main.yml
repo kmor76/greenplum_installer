@@ -1,0 +1,117 @@
+---
+- name:  close selinux temporary
+  shell: setenforce 0
+  failed_when: false
+
+- name: close selinux forever
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+
+- name: create data dir
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'
+  with_items:
+    - '{{ data_directory }}'
+
+- name: copy files
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    remote_src: no
+  with_items:
+    - { src: 'vdb5.layout', dest: '/root/' }
+    - { src: 'data.mount', dest: '/etc/systemd/system/' }
+
+#TODO: push systemctl call to ansible.builtin.systemd
+#- name: fdisk
+#  shell: '{{ item }}'
+#  with_items:
+#    - "sfdisk /dev/vdb < /root/vdb5.layout"
+#    - "mkfs.xfs /dev/vdb5"
+#    - "systemctl daemon-reload"
+#    - "systemctl start data.mount"
+#    - "systemctl enable data.mount"
+
+- name: Create docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Add centos user to docker groups
+  ansible.builtin.user:
+    name: centos
+    groups: docker
+    append: yes
+
+- name: Update OS
+  yum:
+    name: '*'
+    state: latest
+
+
+- name: Install the docker
+  yum:
+    name: docker
+    state: latest
+
+- name: Install the mc
+  yum:
+    name: mc
+    state: latest
+
+- name: Install the latest version of docker-py
+  yum:
+    name: python-docker
+    state: latest
+
+- name: Install the latest version of systemd
+  yum:
+    name: systemd
+    state: latest
+
+- name: Make sure a service unit is running
+  ansible.builtin.systemd:
+    state: started
+    name: docker
+
+
+#- name: change data directory ownership
+#  file:
+#    path: '{{ trino_config_directory }}'
+#    owner: '{{ trino_user }}'
+#    group: '{{ trino_user }}'
+#    recurse: yes
+#
+#- name: copy trino template files
+#  template:
+#    src: '{{ item.src }}'
+#    dest: '{{ item.dest }}'
+#  with_items:
+#    - { src: 'node.properties.j2', dest: '{{ trino_config_directory }}/node.properties' }
+#    - { src: 'config.properties.j2', dest: '{{ trino_config_directory }}/config.properties' }
+#  delegate_facts: true
+#
+#- name: copy trino files
+#  copy:
+#    src: '{{ item.src }}'
+#    dest: '{{ item.dest }}'
+#    remote_src: no
+#  with_items:
+#    - { src: 'catalog', dest: '{{ trino_config_directory }}/' }
+#    - { src: 'jvm.config', dest: '{{ trino_config_directory }}/jvm.config' }
+#    - { src: 'log.properties', dest: '{{ trino_config_directory }}/log.properties' }
+#
+#- name: Create a trino container
+#  docker_container:
+#    name: trino
+#    image: trinodb/trino:376
+#    recreate: yes
+#    network_mode: host
+#    ports:
+#      - 8080:8080
+#    volumes:
+#      - /srv/trino/etc/:/etc/trino/

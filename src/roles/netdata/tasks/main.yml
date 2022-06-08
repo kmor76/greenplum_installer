@@ -1,0 +1,19 @@
+---
+
+- name: Create a netdata container
+  docker_container:
+    name: netdata
+    image: netdata/netdata
+    recreate: yes
+    capabilities:
+      - SYS_PTRACE
+    security_opts:
+      - apparmor=unconfined
+    ports:
+      - 19999:19999
+    volumes:
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro

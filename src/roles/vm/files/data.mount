@@ -1,0 +1,11 @@
+[Unit]
+Description=Data drive
+
+[Mount]
+What=/dev/vdb5
+Where=/data
+Type=xfs
+Options=defaults
+
+[Install]
+WantedBy=multi-user.target

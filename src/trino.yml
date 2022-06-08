@@ -1,0 +1,9 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Start trino
+  gather_facts: true
+  hosts: trino
+  roles:
+    - trino
+  tags: trino

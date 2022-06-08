@@ -1,0 +1,64 @@
+---
+
+- name: delete trino config dir
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - '{{ trino_config_directory }}'
+
+- name: Install the latest version of docker-py
+  yum:
+    name: python-docker
+    state: latest
+
+- name: create trino user for each hosts
+  user:
+    name: '{{ trino_user }}'
+    password: "{{ trino_user_password | password_hash('sha512') }}"
+
+- name: create trino config dir
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'
+  with_items:
+    - '{{ trino_config_directory }}'
+    - '{{ trino_config_directory }}/catalog/'
+
+- name: change data directory ownership
+  file:
+    path: '{{ trino_config_directory }}'
+    owner: '{{ trino_user }}'
+    group: '{{ trino_user }}'
+    recurse: yes
+
+- name: copy trino template files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: 'node.properties.j2', dest: '{{ trino_config_directory }}/node.properties' }
+    - { src: 'config.properties.j2', dest: '{{ trino_config_directory }}/config.properties' }
+  delegate_facts: true
+
+- name: copy trino files
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    remote_src: no
+  with_items:
+    - { src: 'catalog', dest: '{{ trino_config_directory }}/' }
+    - { src: 'jvm.config', dest: '{{ trino_config_directory }}/jvm.config' }
+    - { src: 'log.properties', dest: '{{ trino_config_directory }}/log.properties' }
+
+- name: Create a trino container
+  docker_container:
+    name: trino
+    image: trinodb/trino
+    recreate: yes
+    network_mode: host
+    ports:
+      - 8080:8080
+    volumes:
+      - /srv/trino/etc/:/etc/trino/

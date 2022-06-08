@@ -1,0 +1,9 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Start netdata
+  gather_facts: true
+  hosts: node
+  roles:
+    - netdata
+  tags: netdata

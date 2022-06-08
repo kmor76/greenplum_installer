@@ -1,0 +1,480 @@
+*******************************************************************************************************************************************************************************************************************
+ ________  ________  _______   _______   ________   ________  ___       ___  ___  _____ ______      
+|\   ____\|\   __  \|\  ___ \ |\  ___ \ |\   ___  \|\   __  \|\  \     |\  \|\  \|\   _ \  _   \    
+\ \  \___|\ \  \|\  \ \   __/|\ \   __/|\ \  \\ \  \ \  \|\  \ \  \    \ \  \\\  \ \  \\\__\ \  \   
+ \ \  \  __\ \   _  _\ \  \_|/_\ \  \_|/_\ \  \\ \  \ \   ____\ \  \    \ \  \\\  \ \  \\|__| \  \  
+  \ \  \|\  \ \  \\  \\ \  \_|\ \ \  \_|\ \ \  \\ \  \ \  \___|\ \  \____\ \  \\\  \ \  \    \ \  \ 
+   \ \_______\ \__\\ _\\ \_______\ \_______\ \__\\ \__\ \__\    \ \_______\ \_______\ \__\    \ \__\
+    \|_______|\|__|\|__|\|_______|\|_______|\|__| \|__|\|__|     \|_______|\|_______|\|__|     \|__|
+
+
+ Greenplum Cluster Automatic Installer V1.0 
+ Publish Time  : 2021-07-17 
+ Write Author  : tang  
+ Contact Email : inrgihc@126.com  
+ Copyright @ tang reserved!
+
+ Operation time: 2022-05-25 03:05:05  
+
+*******************************************************************************************************************************************************************************************************************[INFO]: check command package : [ epel-release ]
+[INFO]: command [ epel-release ] already installed.
+[INFO]: check command package : [ python ]
+[INFO]: command [ python ] already installed.
+[INFO]: check command package : [ ansible ]
+[INFO]: command [ ansible ] already installed.
+[INFO]: check command package : [ ntpdate ]
+[INFO]: command [ ntpdate ] already installed.
+
+PLAY [1. install environment and package] *************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:22 -0400 (0:00:00.079)       0:00:00.079 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+ok: [ER407-node1.tc.test]
+
+TASK [autossh : configure sshd config file] ***********************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:39 -0400 (0:00:16.729)       0:00:16.808 ********* 
+ok: [ER407-node1.tc.test] => (item={u'regexp': u'^StrictModes yes', u'line': u'StrictModes no'})
+ok: [ER407-node3.tc.test] => (item={u'regexp': u'^StrictModes yes', u'line': u'StrictModes no'})
+ok: [ER407-node2.tc.test] => (item={u'regexp': u'^StrictModes yes', u'line': u'StrictModes no'})
+ok: [ER407-node1.tc.test] => (item={u'regexp': u'^#StrictModes yes', u'line': u'StrictModes no'})
+ok: [ER407-node3.tc.test] => (item={u'regexp': u'^#StrictModes yes', u'line': u'StrictModes no'})
+ok: [ER407-node2.tc.test] => (item={u'regexp': u'^#StrictModes yes', u'line': u'StrictModes no'})
+
+TASK [autossh : restart sshd service] *****************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:43 -0400 (0:00:04.327)       0:00:21.135 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node2.tc.test]
+changed: [ER407-node1.tc.test]
+
+TASK [autossh : enforce environment variable] *********************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:46 -0400 (0:00:02.618)       0:00:23.754 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [autossh : close ssh key check ask] **************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:48 -0400 (0:00:02.218)       0:00:25.972 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [autossh : delete /root/.ssh/] *******************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:50 -0400 (0:00:02.158)       0:00:28.131 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [autossh : generating public/private rsa key pair] ***********************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:53 -0400 (0:00:02.260)       0:00:30.391 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [autossh : delete /tmp/ssh/ directory] ***********************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:55 -0400 (0:00:02.328)       0:00:32.720 ********* 
+changed: [ER407-node3.tc.test -> 127.0.0.1]
+changed: [ER407-node2.tc.test -> 127.0.0.1]
+changed: [ER407-node1.tc.test -> 127.0.0.1]
+
+TASK [autossh : fetch copy] ***************************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:56 -0400 (0:00:01.458)       0:00:34.179 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [autossh : append file authorized_keys.log] ******************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:05:59 -0400 (0:00:02.702)       0:00:36.881 ********* 
+changed: [ER407-node3.tc.test -> 127.0.0.1]
+changed: [ER407-node2.tc.test -> 127.0.0.1]
+changed: [ER407-node1.tc.test -> 127.0.0.1]
+
+TASK [autossh : copy authorized_keys] *****************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:01 -0400 (0:00:01.553)       0:00:38.434 ********* 
+changed: [ER407-node1.tc.test]
+changed: [ER407-node3.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [autossh : clean root ssh known_hosts] ***********************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:04 -0400 (0:00:03.581)       0:00:42.016 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [install : check whether centos 7 operator system] ***********************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:06 -0400 (0:00:02.116)       0:00:44.132 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [install : check whether x86_64 platform] ********************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:09 -0400 (0:00:02.216)       0:00:46.349 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node2.tc.test]
+changed: [ER407-node1.tc.test]
+
+TASK [install : check whether can connect internet] ***************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:11 -0400 (0:00:02.560)       0:00:48.909 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [install : add base yum repository] **************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:15 -0400 (0:00:03.759)       0:00:52.668 ********* 
+ok: [ER407-node1.tc.test]
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [install : add epel yum repository] **************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:17 -0400 (0:00:02.167)       0:00:54.836 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node1.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [install : unmask firewall service] **************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:19 -0400 (0:00:02.253)       0:00:57.090 ********* 
+changed: [ER407-node3.tc.test] => (item=systemctl unmask firewalld)
+changed: [ER407-node2.tc.test] => (item=systemctl unmask firewalld)
+changed: [ER407-node1.tc.test] => (item=systemctl unmask firewalld)
+changed: [ER407-node3.tc.test] => (item=systemctl stop iptables)
+changed: [ER407-node2.tc.test] => (item=systemctl stop iptables)
+changed: [ER407-node1.tc.test] => (item=systemctl stop iptables)
+changed: [ER407-node3.tc.test] => (item=systemctl disable iptables)
+changed: [ER407-node2.tc.test] => (item=systemctl disable iptables)
+changed: [ER407-node1.tc.test] => (item=systemctl disable iptables)
+
+TASK [install : stop and disable firewall service] ****************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:25 -0400 (0:00:05.673)       0:01:02.763 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+ok: [ER407-node1.tc.test]
+
+TASK [make sure for expect is installed] **************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:28 -0400 (0:00:02.955)       0:01:05.719 ********* 
+ok: [ER407-node1.tc.test]
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [install : close selinux temporary] **************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:30 -0400 (0:00:02.460)       0:01:08.179 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [install : close selinux forever] ****************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:33 -0400 (0:00:02.239)       0:01:10.419 ********* 
+ok: [ER407-node1.tc.test]
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [make sure ntp is installed] *********************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:35 -0400 (0:00:02.250)       0:01:12.669 ********* 
+ok: [ER407-node1.tc.test]
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [install : configure sync time using aliyun server] **********************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:37 -0400 (0:00:02.491)       0:01:15.160 ********* 
+ok: [ER407-node2.tc.test]
+ok: [ER407-node1.tc.test]
+ok: [ER407-node3.tc.test]
+
+TASK [install : change host name to etc-hostname] *****************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:40 -0400 (0:00:02.715)       0:01:17.876 ********* 
+changed: [ER407-node1.tc.test]
+changed: [ER407-node3.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [install : change host name by command hostname] *************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:41 -0400 (0:00:01.110)       0:01:18.987 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [install : update configure for etc-hosts] *******************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:44 -0400 (0:00:02.220)       0:01:21.207 ********* 
+ok: [ER407-node1.tc.test]
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [install : get shmall] ***************************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:46 -0400 (0:00:02.306)       0:01:23.514 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node2.tc.test]
+changed: [ER407-node1.tc.test]
+
+TASK [install : get shmmax] ***************************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:48 -0400 (0:00:02.426)       0:01:25.941 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node2.tc.test]
+changed: [ER407-node1.tc.test]
+
+TASK [install : get min_free_kbytes] ******************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:51 -0400 (0:00:02.381)       0:01:28.323 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node2.tc.test]
+changed: [ER407-node1.tc.test]
+
+TASK [install : set shmall] ***************************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:53 -0400 (0:00:02.329)       0:01:30.652 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+ok: [ER407-node1.tc.test]
+
+TASK [install : set shmmax] ***************************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:55 -0400 (0:00:02.416)       0:01:33.068 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node1.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [install : set min_free_kbytes] ******************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:06:58 -0400 (0:00:02.129)       0:01:35.198 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node1.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [install : configure sysctl] *********************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:07:00 -0400 (0:00:02.296)       0:01:37.494 ********* 
+ok: [ER407-node3.tc.test] => (item={u'key': u'vm.dirty_expire_centisecs', u'value': 10})
+ok: [ER407-node1.tc.test] => (item={u'key': u'vm.dirty_expire_centisecs', u'value': 10})
+ok: [ER407-node2.tc.test] => (item={u'key': u'vm.dirty_expire_centisecs', u'value': 10})
+changed: [ER407-node3.tc.test] => (item={u'key': u'vm.dirty_background_ratio', u'value': 10})
+ok: [ER407-node3.tc.test] => (item={u'key': u'kernel.msgmnb', u'value': 65536})
+changed: [ER407-node2.tc.test] => (item={u'key': u'vm.dirty_background_ratio', u'value': 10})
+changed: [ER407-node1.tc.test] => (item={u'key': u'vm.dirty_background_ratio', u'value': 10})
+ok: [ER407-node3.tc.test] => (item={u'key': u'vm.overcommit_ratio', u'value': 95})
+ok: [ER407-node2.tc.test] => (item={u'key': u'kernel.msgmnb', u'value': 65536})
+ok: [ER407-node3.tc.test] => (item={u'key': u'kernel.shmmni', u'value': 4096})
+ok: [ER407-node1.tc.test] => (item={u'key': u'kernel.msgmnb', u'value': 65536})
+ok: [ER407-node3.tc.test] => (item={u'key': u'kernel.msgmni', u'value': 2048})
+ok: [ER407-node2.tc.test] => (item={u'key': u'vm.overcommit_ratio', u'value': 95})
+ok: [ER407-node1.tc.test] => (item={u'key': u'vm.overcommit_ratio', u'value': 95})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.core.rmem_max', u'value': 2097152})
+ok: [ER407-node2.tc.test] => (item={u'key': u'kernel.shmmni', u'value': 4096})
+ok: [ER407-node3.tc.test] => (item={u'key': u'vm.dirty_writeback_centisecs', u'value': 3})
+ok: [ER407-node1.tc.test] => (item={u'key': u'kernel.shmmni', u'value': 4096})
+ok: [ER407-node1.tc.test] => (item={u'key': u'kernel.msgmni', u'value': 2048})
+ok: [ER407-node2.tc.test] => (item={u'key': u'kernel.msgmni', u'value': 2048})
+changed: [ER407-node3.tc.test] => (item={u'key': u'vm.dirty_background_bytes', u'value': 1610612736})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.core.rmem_max', u'value': 2097152})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.core.rmem_max', u'value': 2097152})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.ipv4.ip_local_port_range', u'value': u'10000 65535'})
+ok: [ER407-node1.tc.test] => (item={u'key': u'vm.dirty_writeback_centisecs', u'value': 3})
+ok: [ER407-node3.tc.test] => (item={u'key': u'vm.zone_reclaim_mode', u'value': 0})
+ok: [ER407-node2.tc.test] => (item={u'key': u'vm.dirty_writeback_centisecs', u'value': 3})
+changed: [ER407-node3.tc.test] => (item={u'key': u'vm.dirty_ratio', u'value': 20})
+ok: [ER407-node3.tc.test] => (item={u'key': u'kernel.sem', u'value': u'500 2048000 200 32767'})
+changed: [ER407-node1.tc.test] => (item={u'key': u'vm.dirty_background_bytes', u'value': 1610612736})
+changed: [ER407-node2.tc.test] => (item={u'key': u'vm.dirty_background_bytes', u'value': 1610612736})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.ipv4.conf.all.arp_filter', u'value': 1})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.ipv4.ip_local_port_range', u'value': u'10000 65535'})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.ipv4.ip_local_port_range', u'value': u'10000 65535'})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.ipv4.conf.default.accept_source_route', u'value': 0})
+ok: [ER407-node3.tc.test] => (item={u'key': u'kernel.core_uses_pid', u'value': 1})
+ok: [ER407-node1.tc.test] => (item={u'key': u'vm.zone_reclaim_mode', u'value': 0})
+ok: [ER407-node2.tc.test] => (item={u'key': u'vm.zone_reclaim_mode', u'value': 0})
+ok: [ER407-node3.tc.test] => (item={u'key': u'vm.overcommit_memory', u'value': 2})
+changed: [ER407-node2.tc.test] => (item={u'key': u'vm.dirty_ratio', u'value': 20})
+ok: [ER407-node3.tc.test] => (item={u'key': u'kernel.msgmax', u'value': 65536})
+changed: [ER407-node1.tc.test] => (item={u'key': u'vm.dirty_ratio', u'value': 20})
+ok: [ER407-node2.tc.test] => (item={u'key': u'kernel.sem', u'value': u'500 2048000 200 32767'})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.ipv4.tcp_syncookies', u'value': 1})
+ok: [ER407-node1.tc.test] => (item={u'key': u'kernel.sem', u'value': u'500 2048000 200 32767'})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.ipv4.tcp_max_syn_backlog', u'value': 4096})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.ipv4.conf.all.arp_filter', u'value': 1})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.ipv4.conf.all.arp_filter', u'value': 1})
+changed: [ER407-node3.tc.test] => (item={u'key': u'vm.dirty_bytes', u'value': 4294967296})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.ipv4.conf.default.accept_source_route', u'value': 0})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.core.wmem_max', u'value': 2097152})
+ok: [ER407-node2.tc.test] => (item={u'key': u'kernel.core_uses_pid', u'value': 1})
+ok: [ER407-node3.tc.test] => (item={u'key': u'vm.swappiness', u'value': 0})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.ipv4.conf.default.accept_source_route', u'value': 0})
+ok: [ER407-node3.tc.test] => (item={u'key': u'net.core.netdev_max_backlog', u'value': 10000})
+ok: [ER407-node3.tc.test] => (item={u'key': u'kernel.sysrq', u'value': 1})
+ok: [ER407-node1.tc.test] => (item={u'key': u'kernel.core_uses_pid', u'value': 1})
+ok: [ER407-node2.tc.test] => (item={u'key': u'vm.overcommit_memory', u'value': 2})
+ok: [ER407-node1.tc.test] => (item={u'key': u'vm.overcommit_memory', u'value': 2})
+ok: [ER407-node2.tc.test] => (item={u'key': u'kernel.msgmax', u'value': 65536})
+ok: [ER407-node1.tc.test] => (item={u'key': u'kernel.msgmax', u'value': 65536})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.ipv4.tcp_syncookies', u'value': 1})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.ipv4.tcp_syncookies', u'value': 1})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.ipv4.tcp_max_syn_backlog', u'value': 4096})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.ipv4.tcp_max_syn_backlog', u'value': 4096})
+changed: [ER407-node2.tc.test] => (item={u'key': u'vm.dirty_bytes', u'value': 4294967296})
+changed: [ER407-node1.tc.test] => (item={u'key': u'vm.dirty_bytes', u'value': 4294967296})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.core.wmem_max', u'value': 2097152})
+ok: [ER407-node2.tc.test] => (item={u'key': u'vm.swappiness', u'value': 0})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.core.wmem_max', u'value': 2097152})
+ok: [ER407-node2.tc.test] => (item={u'key': u'net.core.netdev_max_backlog', u'value': 10000})
+ok: [ER407-node1.tc.test] => (item={u'key': u'vm.swappiness', u'value': 0})
+ok: [ER407-node2.tc.test] => (item={u'key': u'kernel.sysrq', u'value': 1})
+ok: [ER407-node1.tc.test] => (item={u'key': u'net.core.netdev_max_backlog', u'value': 10000})
+ok: [ER407-node1.tc.test] => (item={u'key': u'kernel.sysrq', u'value': 1})
+
+TASK [install : state PAM limits] *********************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:07:39 -0400 (0:00:38.758)       0:02:16.253 ********* 
+ok: [ER407-node1.tc.test] => (item={u'key': u'memlock', u'value': u'unlimited'})
+ok: [ER407-node1.tc.test] => (item={u'key': u'core', u'value': u'unlimited'})
+ok: [ER407-node3.tc.test] => (item={u'key': u'memlock', u'value': u'unlimited'})
+ok: [ER407-node2.tc.test] => (item={u'key': u'memlock', u'value': u'unlimited'})
+ok: [ER407-node1.tc.test] => (item={u'key': u'nofile', u'value': 655360})
+ok: [ER407-node3.tc.test] => (item={u'key': u'core', u'value': u'unlimited'})
+ok: [ER407-node1.tc.test] => (item={u'key': u'nproc', u'value': 655360})
+ok: [ER407-node3.tc.test] => (item={u'key': u'nofile', u'value': 655360})
+ok: [ER407-node2.tc.test] => (item={u'key': u'core', u'value': u'unlimited'})
+ok: [ER407-node3.tc.test] => (item={u'key': u'nproc', u'value': 655360})
+ok: [ER407-node2.tc.test] => (item={u'key': u'nofile', u'value': 655360})
+ok: [ER407-node2.tc.test] => (item={u'key': u'nproc', u'value': 655360})
+
+TASK [install : copy greeplum rpm package to host] ****************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:07:44 -0400 (0:00:05.846)       0:02:22.100 ********* 
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+
+TASK [install greeplum rpm package] *******************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:06 -0400 (0:00:21.965)       0:02:44.066 ********* 
+ok: [ER407-node1.tc.test]
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]
+
+TASK [cleanup greeplum install package file from host] ************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:09 -0400 (0:00:02.368)       0:02:46.435 ********* 
+changed: [ER407-node1.tc.test]
+changed: [ER407-node2.tc.test]
+changed: [ER407-node3.tc.test]
+
+TASK [install : create greenplum admin user for each hosts] *******************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:11 -0400 (0:00:02.155)       0:02:48.591 ********* 
+changed: [ER407-node2.tc.test]
+changed: [ER407-node3.tc.test]
+changed: [ER407-node1.tc.test]
+
+TASK [install : create data directory if not exist] ***************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:14 -0400 (0:00:03.221)       0:02:51.812 ********* 
+ok: [ER407-node1.tc.test] => (item=/data/gpdb/)
+ok: [ER407-node3.tc.test] => (item=/data/gpdb/)
+ok: [ER407-node2.tc.test] => (item=/data/gpdb/)
+ok: [ER407-node1.tc.test] => (item=/data/gpdb/master/)
+ok: [ER407-node3.tc.test] => (item=/data/gpdb/master/)
+ok: [ER407-node2.tc.test] => (item=/data/gpdb/master/)
+ok: [ER407-node1.tc.test] => (item=/data/gpdb/primary/)
+ok: [ER407-node3.tc.test] => (item=/data/gpdb/primary/)
+ok: [ER407-node2.tc.test] => (item=/data/gpdb/primary/)
+ok: [ER407-node1.tc.test] => (item=/data/gpdb/mirror/)
+ok: [ER407-node3.tc.test] => (item=/data/gpdb/mirror/)
+ok: [ER407-node2.tc.test] => (item=/data/gpdb/mirror/)
+
+TASK [install : change data directory ownership] ******************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:20 -0400 (0:00:06.242)       0:02:58.054 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node1.tc.test]
+ok: [ER407-node2.tc.test]
+
+PLAY [2. initialize greenplum cluster] ****************************************************************************************************************************************************************************
+
+TASK [initsys : convert greenplum master hostname to ip address] **************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:22 -0400 (0:00:02.055)       0:03:00.110 ********* 
+changed: [ER407-node1.tc.test -> 127.0.0.1]
+
+TASK [initsys : calculate greenplum primary segment instance] *****************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:23 -0400 (0:00:00.984)       0:03:01.094 ********* 
+changed: [ER407-node1.tc.test -> 127.0.0.1]
+
+TASK [initsys : calculate greenplum mirror segment instance] ******************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:24 -0400 (0:00:00.889)       0:03:01.984 ********* 
+changed: [ER407-node1.tc.test -> 127.0.0.1]
+
+TASK [initsys : copy greenplum initialize template files] *********************************************************************************************************************************************************
+Wednesday 25 May 2022  03:08:25 -0400 (0:00:00.912)       0:03:02.897 ********* 
+failed: [ER407-node1.tc.test -> 10.72.105.238] (item={u'dest': u'/home/gpadmin/.bashrc', u'src': u'gpadmin_bashrc.j2'}) => {"ansible_loop_var": "item", "item": {"dest": "/home/gpadmin/.bashrc", "src": "gpadmin_bashrc.j2"}, "msg": "Failed to authenticate: Authentication failed.", "unreachable": true}
+failed: [ER407-node1.tc.test -> 10.72.105.238] (item={u'dest': u'/home/gpadmin/gpinitsystem_config', u'src': u'gpinitsystem_config.j2'}) => {"ansible_loop_var": "item", "item": {"dest": "/home/gpadmin/gpinitsystem_config", "src": "gpinitsystem_config.j2"}, "msg": "Failed to authenticate: Authentication failed.", "unreachable": true}
+fatal: [ER407-node1.tc.test -> {{ greenplum_master_node_ip.stdout }}]: UNREACHABLE! => {"changed": false, "msg": "All items completed", "results": [{"ansible_loop_var": "item", "item": {"dest": "/home/gpadmin/.bashrc", "src": "gpadmin_bashrc.j2"}, "msg": "Failed to authenticate: Authentication failed.", "unreachable": true}, {"ansible_loop_var": "item", "item": {"dest": "/home/gpadmin/gpinitsystem_config", "src": "gpinitsystem_config.j2"}, "msg": "Failed to authenticate: Authentication failed.", "unreachable": true}]}
+
+NO MORE HOSTS LEFT ************************************************************************************************************************************************************************************************
+
+PLAY RECAP ********************************************************************************************************************************************************************************************************
+ER407-node1.tc.test        : ok=44   changed=27   unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+ER407-node2.tc.test        : ok=41   changed=24   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ER407-node3.tc.test        : ok=41   changed=24   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+Wednesday 25 May 2022  03:08:26 -0400 (0:00:01.053)       0:03:03.951 ********* 
+=============================================================================== 
+install : configure sysctl -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 38.76s
+install : copy greeplum rpm package to host --------------------------------------------------------------------------------------------------------------------------------------------------------------- 21.97s
+Gathering Facts ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 16.73s
+install : create data directory if not exist --------------------------------------------------------------------------------------------------------------------------------------------------------------- 6.24s
+install : state PAM limits --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 5.85s
+install : unmask firewall service -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 5.67s
+autossh : configure sshd config file ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- 4.33s
+install : check whether can connect internet --------------------------------------------------------------------------------------------------------------------------------------------------------------- 3.76s
+autossh : copy authorized_keys ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 3.58s
+install : create greenplum admin user for each hosts ------------------------------------------------------------------------------------------------------------------------------------------------------- 3.22s
+install : stop and disable firewall service ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.96s
+install : configure sync time using aliyun server ---------------------------------------------------------------------------------------------------------------------------------------------------------- 2.72s
+autossh : fetch copy --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.70s
+autossh : restart sshd service ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.62s
+install : check whether x86_64 platform -------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.56s
+make sure ntp is installed --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.49s
+make sure for expect is installed -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.46s
+install : get shmall --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.43s
+install : set shmall --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.42s
+install : get shmmax --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 2.38s
+[ERROR]: Install Greenplum cluster failed,Please check log above! 
+*******************************************************************************************************************************************************************************************************************
+
+
+*******************************************************************************************************************************************************************************************************************
+   !!! 非 常 抱 歉 本 次 系 统 安 装 【失 败】 !!!
+
+*******************************************************************************************************************************************************************************************************************
+ 您可以尝试如下操作：
+
+ 一、 根据上述提示的错误信息，进行如下步骤:
+
+   1 检查host.ini配置文件中的参数是否错误
+
+   2 重启所有服务器
+
+   3 先执行卸载操作
+
+   4 再次执行安装操作
+
+ 二、 经过上述步骤的多次尝试后，仍然无法解决时，您可尝试:
+
+   将安装日志文件(gpdb_install.log)以电子邮件的方式发送至：inrgihc@126.com寻求帮助
+
+**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+ ________  ________  _______   _______   ________   ________  ___       ___  ___  _____ ______      
+|\   ____\|\   __  \|\  ___ \ |\  ___ \ |\   ___  \|\   __  \|\  \     |\  \|\  \|\   _ \  _   \    
+\ \  \___|\ \  \|\  \ \   __/|\ \   __/|\ \  \\ \  \ \  \|\  \ \  \    \ \  \\\  \ \  \\\__\ \  \   
+ \ \  \  __\ \   _  _\ \  \_|/_\ \  \_|/_\ \  \\ \  \ \   ____\ \  \    \ \  \\\  \ \  \\|__| \  \  
+  \ \  \|\  \ \  \\  \\ \  \_|\ \ \  \_|\ \ \  \\ \  \ \  \___|\ \  \____\ \  \\\  \ \  \    \ \  \ 
+   \ \_______\ \__\\ _\\ \_______\ \_______\ \__\\ \__\ \__\    \ \_______\ \_______\ \__\    \ \__\
+    \|_______|\|__|\|__|\|_______|\|_______|\|__| \|__|\|__|     \|_______|\|_______|\|__|     \|__|
+
+
+ Greenplum Cluster Automatic Installer V1.0 
+ Publish Time  : 2021-07-17 
+ Write Author  : tang  
+ Contact Email : inrgihc@126.com  
+ Copyright @ tang reserved!
+
+ Operation time: 2022-05-25 03:12:15  
+
+*******************************************************************************************************************************************************************************************************************[INFO]: check command package : [ epel-release ]
+[INFO]: command [ epel-release ] already installed.
+[INFO]: check command package : [ python ]
+[INFO]: command [ python ] already installed.
+[INFO]: check command package : [ ansible ]
+[INFO]: command [ ansible ] already installed.
+[INFO]: check command package : [ ntpdate ]
+[INFO]: command [ ntpdate ] already installed.
+
+PLAY [1. install environment and package] *************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************************************************
+Wednesday 25 May 2022  03:12:32 -0400 (0:00:00.084)       0:00:00.084 ********* 
+ok: [ER407-node3.tc.test]
+ok: [ER407-node2.tc.test]

@@ -7,10 +7,10 @@
 - name: remove tmp files in tmp directory
   shell:  rm -rf /tmp/.s.PGSQL.* 
 
-- name: erase greenplum package
-  yum:
-    name: open-source-greenplum-db-6
-    state: absent
+#- name: erase greenplum package
+#  yum:
+#    name: open-source-greenplum-db-6
+#    state: absent
     
 - name: delete greenplum install and data files
   file:
@@ -24,3 +24,8 @@
   user:
     name: "{{ greenplum_admin_user }}"
     state: absent
+
+#- name: delete iperf
+#  yum:
+#    name: iperf
+#    state: absent

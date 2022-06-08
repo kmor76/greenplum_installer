@@ -18,7 +18,7 @@
 
 - name: check whether can connect internet
   shell: |
-    ping -c 1 -w 1 www.baidu.com > /dev/null; \
+    ping -c 1 -w 1 ya.ru > /dev/null; \
     if [ $? -ne 0 ]; then \
         echo "[ERROR]: host can not connect internet world!"; \
         exit 1; \
@@ -50,8 +50,9 @@
     - 'systemctl disable iptables'
   failed_when: false
 
-- name: stop and disable firewall service
-  service: name=firewalld state=stopped enabled=no
+
+#- name: stop and disable firewall service
+#  service: name=firewalld state=stopped enabled=no
 
 - name: make sure for expect is installed
   yum: name=expect state=installed
@@ -207,3 +208,8 @@
     owner: '{{ greenplum_admin_user }}'
     group: '{{ greenplum_admin_user }}'
     recurse: yes
+
+- name: install iperf
+  yum:
+    name: iperf
+    state: present

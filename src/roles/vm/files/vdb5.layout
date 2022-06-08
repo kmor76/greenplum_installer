@@ -1,0 +1,8 @@
+# partition table of /dev/vdb
+unit: sectors
+
+/dev/vdb1 : start=       63, size= 62914497, Id= 5
+/dev/vdb2 : start=        0, size=        0, Id= 0
+/dev/vdb3 : start=        0, size=        0, Id= 0
+/dev/vdb4 : start=        0, size=        0, Id= 0
+/dev/vdb5 : start=      126, size= 62914434, Id=83
