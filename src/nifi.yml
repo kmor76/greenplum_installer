@@ -1,0 +1,9 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Start nifi
+  gather_facts: true
+  hosts: nifi
+  roles:
+    - nifi
+  tags: nifi

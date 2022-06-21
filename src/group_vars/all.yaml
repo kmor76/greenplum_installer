@@ -3,6 +3,10 @@ trino_user: 'trino'
 
 trino_user_password: '1qazXSW@'
 
+nifi_user: 'nifi'
+
+nifi_user_password: '1qazXSW@'
+
 # greenplum run of each host user
 greenplum_admin_user: 'gpadmin'
 
@@ -10,4 +14,4 @@ greenplum_admin_user: 'gpadmin'
 greenplum_admin_password: '1qazXSW@'
 
 # greenplum instance number for each of segment node, must greater than 0
-greenplum_primary_segments_per_host_number: 10
+greenplum_primary_segments_per_host_number: 4

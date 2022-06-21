@@ -1,0 +1,110 @@
+---
+
+- name: delete nifi config dir
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - '{{ nifi_base_dir }}'
+    - '{{ nifi_data_directory }}/flowfile_repository'
+    - '{{ nifi_data_directory }}/provenance_repository'
+    - '{{ nifi_data_directory }}/content_repository'
+    - '{{ nifi_config_directory }}'
+    - '{{ nifi_registry_config_directory }}'
+
+
+
+- name: Install the latest version of docker-py
+  yum:
+    name: python-docker
+    state: latest
+
+- name: create nifi user for each hosts
+  user:
+    name: '{{ nifi_user }}'
+    password: "{{ nifi_user_password | password_hash('sha512') }}"
+
+- name: create nifi dirs
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0777'
+  with_items:
+    - '{{ nifi_config_directory }}'
+    - '{{ nifi_data_directory }}/output'
+    - '{{ nifi_data_directory }}/flowfile_repository'
+    - '{{ nifi_data_directory }}/provenance_repository'
+    - '{{ nifi_data_directory }}/content_repository'
+    - '{{ nifi_additional_lib_directory }}'
+    - '{{ nifi_registry_data_directory }}/flow_storage'
+    - '{{ nifi_registry_config_directory }}'
+
+- name: change directories ownership
+  file:
+    path: '{{ item }}'
+    owner: '{{ nifi_user }}'
+    group: '{{ nifi_user }}'
+    recurse: yes
+  with_items:
+    - '{{ nifi_config_directory }}'
+    - '{{ nifi_data_directory }}/output'
+    - '{{ nifi_data_directory }}/flowfile_repository'
+    - '{{ nifi_data_directory }}/provenance_repository'
+    - '{{ nifi_data_directory }}/content_repository'
+    - '{{ nifi_additional_lib_directory }}'
+    - '{{ nifi_registry_data_directory }}/flow_storage'
+    - '{{ nifi_registry_config_directory }}'
+
+
+- name: copy nifi files
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    remote_src: no
+    mode: '0777'
+  with_items:
+    - { src: 'postgresql-42.2.20.jar', dest: '{{ nifi_additional_lib_directory }}' }
+    - { src: 'conf/bootstrap.conf', dest: '{{ nifi_config_directory }}' }
+    - { src: 'conf/nifi.properties', dest: '{{ nifi_config_directory }}' }
+    - { src: 'registry_conf/bootstrap.conf', dest: '{{ nifi_registry_config_directory }}' }
+    - { src: 'registry_conf/providers.xml', dest: '{{ nifi_registry_config_directory }}' }
+
+
+- name: Create a nifi container
+  docker_container:
+    name: nifi
+    image: kmor76/nifi:1.17.0-SNAPSHOT-dockermaven
+    hostname: '{{ hostname }}'
+    recreate: yes
+    ports:
+      - 8443:8443
+      - 8000:8000
+      - 8080:8080
+      - 10000:10000
+    volumes:
+      - '{{ nifi_additional_lib_directory }}/postgresql-42.2.20.jar:/opt/nifi/nifi-current/lib/postgresql-42.2.20.jar'
+      - '{{ nifi_data_directory }}/output:/data'
+      - '{{ nifi_data_directory }}/flowfile_repository:/opt/nifi/nifi-current/flowfile_repository'
+      - '{{ nifi_data_directory }}/provenance_repository:/opt/nifi/nifi-current/provenance_repository'
+      - '{{ nifi_data_directory }}/content_repository:/opt/nifi/nifi-current/content_repository'
+      - '{{ nifi_config_directory }}/bootstrap.conf:/opt/nifi/nifi-current/conf/bootstrap.conf:ro'
+    env:
+      NIFI_WEB_HTTPS_HOST: "{{ hostname }}"
+      SINGLE_USER_CREDENTIALS_USERNAME: "admin"
+      SINGLE_USER_CREDENTIALS_PASSWORD: "adminadminadmin"
+
+- name: Create a nifi-registry container
+  docker_container:
+    name: nifi-registry
+    image: kmor76/nifi-registry:1.17.0-SNAPSHOT-dockermaven
+    hostname: '{{ hostname }}'
+    user: nifi:nifi
+    ports:
+      - 18080:18080
+    volumes:
+      - '{{ nifi_registry_config_directory }}/bootstrap.conf:/opt/nifi-registry/nifi-registry-current/conf/bootstrap.conf'
+      - '{{ nifi_registry_config_directory }}/providers.xml:/opt/nifi-registry/nifi-registry-current/conf/providers.xml'
+      - '{{ nifi_registry_data_directory }}/flow_storage:/opt/nifi-registry/nifi-registry-current/flow_storage'
+    env:
+      NIFI_REGISTRY_FLOW_STORAGE_DIR: /opt/nifi-registry/nifi-registry-current/flow_storage
+

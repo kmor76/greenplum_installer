@@ -58,6 +58,7 @@
     image: trinodb/trino
     recreate: yes
     network_mode: host
+    hostname: '{{ ansible_hostname }}'
     ports:
       - 8080:8080
     volumes:

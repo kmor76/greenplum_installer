@@ -27,6 +27,11 @@
     - { src: 'data.mount', dest: '/etc/systemd/system/' }
 
 #TODO: push systemctl call to ansible.builtin.systemd
+
+- name: Create docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
 #- name: fdisk
 #  shell: '{{ item }}'
 #  with_items:
@@ -35,11 +40,6 @@
 #    - "systemctl daemon-reload"
 #    - "systemctl start data.mount"
 #    - "systemctl enable data.mount"
-
-- name: Create docker group
-  ansible.builtin.group:
-    name: docker
-    state: present
 
 - name: Add centos user to docker groups
   ansible.builtin.user:
@@ -72,6 +72,10 @@
   yum:
     name: systemd
     state: latest
+
+#- name: Unconditionally reboot the machine with all defaults
+#  reboot:
+
 
 - name: Make sure a service unit is running
   ansible.builtin.systemd:
